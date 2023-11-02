@@ -20,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "../ui/badge";
 import { createQuestion } from "@/lib/actions/question.action";
-import { Router } from "next/router";
+// import { Router } from "next/router";
 
 const type: any = "create";
 
