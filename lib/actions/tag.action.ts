@@ -1,8 +1,10 @@
 "use server";
 
-import { GetTopInteractedTagsParams } from "./shared.types";
-import { connectToDatabase } from "../mongoose";
+import Question from "@/database/question.model";
+import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
+import { connectToDatabase } from "../mongoose";
+import { GetTopInteractedTagsParams } from "./shared.types";
 
 export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   try {
@@ -16,12 +18,25 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
       throw new Error("User not found");
     }
 
-    // Find interactions for the user and group by tags ...
-    // Interaction...
-    return ['tag1', 'tag2', 'tag3'];
+    const tags = await Question.find({ author: userId })
+      .populate({ path: "tags", model: Tag })
+      .populate({ path: "author", model: User })
+      .distinct("tags");
 
+    const newTags: any = [];
+
+    for (const tagId of tags) {
+      const tag = await Tag.findById(tagId).populate({
+        path: "questions",
+        model: Question,
+      });
+      newTags.push(tag);
+    }
+
+    // Teraz newTags powinno zawierać tablicę tagów z pełnymi informacjami
+    return newTags.slice(0, 3);
   } catch (error) {
     console.log(error);
-    throw Error;
+    throw error;
   }
 }
