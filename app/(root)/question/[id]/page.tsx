@@ -2,6 +2,7 @@ import Answer from "@/components/forms/Answer";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
+import { createAnswer } from "@/lib/actions/answer.action";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { formatAndDivideNumbers, getTimestamp } from "@/lib/utils";
 import Image from "next/image";
@@ -12,6 +13,7 @@ const Page = async ({ params, searchParams }) => {
   const result = await getQuestionById({ questionId: params.id });
 
   console.log(result);
+
   return (
     <>
       <div className="flex-start w-full flex-col">
