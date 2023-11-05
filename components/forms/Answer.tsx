@@ -4,20 +4,17 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { AnswerSchema } from "@/lib/validations";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "../ui/input";
 import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "@/context/ThemeProvider";
-import { redirect, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { createAnswer } from "@/lib/actions/answer.action";
@@ -54,12 +51,11 @@ const Answer = ({ question, questionId, authorId }: Props) => {
 
       form.reset();
 
-      if(editorRef.current) {
+      if (editorRef.current) {
         const editor = editorRef.current as any;
 
-        editor.setContent('');
+        editor.setContent("");
       }
-
     } catch (error) {
       console.log(error);
       throw error;
@@ -74,7 +70,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
 
   return (
     <div>
-      <div className="flex flex-col justify-between gap-5 sm;flex-row sm:items-center sm:gap-2">
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <h4 className="paragraph-semibold text-dark400_light800">
           Write your answer here
         </h4>
