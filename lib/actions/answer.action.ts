@@ -3,14 +3,12 @@
 import Answer from "@/database/answer.model";
 import { connectToDatabase } from "../mongoose";
 import {
-  AnswerVoteParams,
   CreateAnswerParams,
   GetAnswersParams,
   QuestionVoteParams,
 } from "./shared.types";
 import Question from "@/database/question.model";
 import { revalidatePath } from "next/cache";
-import { updateUser } from "./user.action";
 
 export const createAnswer = async (params: CreateAnswerParams) => {
   try {
