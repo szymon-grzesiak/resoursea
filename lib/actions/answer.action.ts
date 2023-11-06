@@ -3,6 +3,7 @@
 import Answer from "@/database/answer.model";
 import { connectToDatabase } from "../mongoose";
 import {
+  AnswerVoteParams,
   CreateAnswerParams,
   GetAnswersParams,
   QuestionVoteParams,
@@ -52,11 +53,11 @@ export const getAnswers = async (params: GetAnswersParams) => {
   }
 };
 
-export async function upvoteQuestion(params: QuestionVoteParams) {
+export async function upvoteAnswer(params: AnswerVoteParams) {
   try {
     connectToDatabase();
-    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
-
+    const { answerId, userId, hasupVoted, hasdownVoted, path } = params;
+ 
     let updateQuery = {};
 
     if (hasupVoted) {
@@ -69,11 +70,11 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
     } else {
       updateQuery = { $addToSet: { upvotes: userId } };
     }
-    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, {
       new: true,
     });
-    if (!question) {
-      throw new Error("Question not found");
+    if (!answer) {
+      throw new Error("Answer not found");
     }
     revalidatePath(path);
   } catch (error) {
@@ -82,10 +83,10 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
   }
 }
 
-export async function downvoteQuestion(params: QuestionVoteParams) {
+export async function downvoteAnswer(params: AnswerVoteParams) {
   try {
     connectToDatabase();
-    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+    const { answerId, userId, hasupVoted, hasdownVoted, path } = params;
 
     let updateQuery = {};
 
@@ -99,9 +100,9 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
     } else {
       updateQuery = { $addToSet: { downvotes: userId } };
     }
-    const question = await Question.findByIdAndUpdate(questionId, updateQuery);
-    if (!question) {
-      throw new Error("Question not found");
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery);
+    if (!answer) {
+      throw new Error("Answer not found");
     }
     revalidatePath(path);
   } catch (error) {
