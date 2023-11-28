@@ -9,13 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getJoinedDate } from "@/lib/utils";
 import ProfileLink from "@/components/shared/ProfileLink";
 import Stats from "@/components/shared/Stats";
-import { userInfo } from "os";
 import QuestionTab from "@/components/shared/QuestionTab";
 import AnswersTab from "@/components/shared/AnswersTab";
 
-const page = async ({ searchParams, params }: URLProps) => {
+const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
   const userInfo = await getUserProfile({ userId: params.id });
+
   return (
     <>
       <div className="flex flex-col-reverse items-start justify-between sm:flex-row">
@@ -27,6 +27,7 @@ const page = async ({ searchParams, params }: URLProps) => {
             height={140}
             className="rounded-full object-cover"
           />
+
           <div className="mt-3">
             <h2 className="h2-bold text-dark100_light900">
               {userInfo.user.name}
@@ -34,8 +35,13 @@ const page = async ({ searchParams, params }: URLProps) => {
             <p className="paragraph-regular text-dark200_light800">
               @{userInfo.user.username}
             </p>
-
             <div className="mt-5 flex flex-wrap items-center justify-start gap-5">
+              {userInfo.user.location && (
+                <ProfileLink
+                  imgUrl="/assets/icons/location.svg"
+                  title={userInfo.user.location}
+                />
+              )}
               {userInfo.user.portfolioWebsite && (
                 <ProfileLink
                   imgUrl="/assets/icons/link.svg"
@@ -43,14 +49,6 @@ const page = async ({ searchParams, params }: URLProps) => {
                   title="Portfolio"
                 />
               )}
-
-              {userInfo.user.location && (
-                <ProfileLink
-                  imgUrl="/assets/icons/location.svg"
-                  title={userInfo.user.location}
-                />
-              )}
-
               <ProfileLink
                 imgUrl="/assets/icons/calendar.svg"
                 title={getJoinedDate(userInfo.user.joinedAt)}
@@ -67,7 +65,7 @@ const page = async ({ searchParams, params }: URLProps) => {
           <SignedIn>
             {clerkId === userInfo.user.clerkId && (
               <Link href="/profile/edit">
-                <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-3 hover:opacity-70">
+                <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-3  transition-shadow hover:shadow-md">
                   Edit Profile
                 </Button>
               </Link>
@@ -80,12 +78,12 @@ const page = async ({ searchParams, params }: URLProps) => {
         totalAnswers={userInfo.totalAnswers}
       />
       <div className="mt-10 flex gap-10">
-        <Tabs defaultValue="top-posts" className="w-[400px]">
+        <Tabs defaultValue="top-posts" className="flex-1">
           <TabsList className="background-light800_dark400 min-h-[42px] p-1">
-            <TabsTrigger className="tab" value="top-posts" >
-              Top Posts
+            <TabsTrigger value="top-posts" className="tab" defaultChecked>
+              Tags Posts
             </TabsTrigger>
-            <TabsTrigger className="tab" value="answers">
+            <TabsTrigger value="answers" className="tab">
               Answers
             </TabsTrigger>
           </TabsList>
@@ -96,7 +94,7 @@ const page = async ({ searchParams, params }: URLProps) => {
               clerkId={clerkId as string}
             />
           </TabsContent>
-          <TabsContent value="answers">
+          <TabsContent value="answers" className="flex w-full flex-col gap-6">
             <AnswersTab
               searchParams={searchParams}
               userId={userInfo.user._id}
@@ -109,4 +107,4 @@ const page = async ({ searchParams, params }: URLProps) => {
   );
 };
 
-export default page;
+export default Page;

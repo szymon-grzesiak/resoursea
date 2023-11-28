@@ -224,8 +224,10 @@ export async function getUserAnswers(params: GetUserStatsParams) {
 
     const { userId, page = 1, pageSize = 10 } = params;
 
+    const totalAnswers = await Answer.countDocuments({ author: userId });
+
     const userAnswers = await Answer.find({ author: userId })
-      .sort({ views: -1, upvotes: -1 })
+      .sort({ upvotes: -1 })
       .populate({
         path: "question",
         model: Question,
@@ -237,7 +239,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
         select: "_id clerkId name picture",
       });
 
-    return userAnswers;
+    return { totalAnswers, answers: userAnswers};
   } catch (error) {
     console.log(error);
     throw error;

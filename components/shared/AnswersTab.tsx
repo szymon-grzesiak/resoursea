@@ -1,8 +1,7 @@
-import { getUserAnswers, getUserQuestions } from "@/lib/actions/user.action";
+import { getUserAnswers } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import React from "react";
-import QuestionCard from "../cards/QuestionCard";
-import Question from "@/database/question.model";
+
 import AnswerCard from "../cards/AnswerCard";
 
 interface Props extends SearchParamsProps {
@@ -17,7 +16,7 @@ const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
   });
   return (
     <>
-      {result.map((answer) => (
+      {result.answers.map((answer) => (
         <AnswerCard
           key={answer._id}
           _id={answer._id}
@@ -25,8 +24,7 @@ const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
           question={answer.question}
           title={answer.content}
           author={answer.author}
-          downvotes={answer.downvotes}
-          upvotes={answer.upvotes}
+          upvotes={answer.upvotes.length}
           createdAt={answer.createdAt}
         />
       ))}
