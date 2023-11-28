@@ -65,3 +65,18 @@ export const formatAndDivideNumbers = (num: number): string => {
     return num.toString();
   }
 };
+
+export const getJoinedDate = (date: Date): string => {
+  const month = date.toLocaleString("default", { month: "long" });
+  const year = date.getFullYear();
+
+  const joinedDate = `${month} ${year}`;
+
+  return joinedDate;
+};
+
+export const extractAndTrimText = (str: any) => {
+  var textOnly = str.replace(/<[^>]*>/g, "");
+  textOnly = textOnly.replace(/[^a-zA-Z]/g, "");
+  return textOnly.slice(0, 10);
+};
