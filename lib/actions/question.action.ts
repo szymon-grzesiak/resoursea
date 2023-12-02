@@ -195,7 +195,9 @@ export async function getHotQuestions() {
   try {
     connectToDatabase();
 
-    const questions = await Question.find().limit(5).sort({ views: 1 });
+    const questions = await Question.find({})
+      .limit(5)
+      .sort({ views: -1, upvotes: -1 });
 
     return questions;
   } catch (error) {

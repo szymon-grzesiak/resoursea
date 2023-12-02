@@ -99,6 +99,21 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
   }
 }
 
+export async function getTopPopularTags() {
+  try {
+    connectToDatabase();
+
+    const popularTags = await Tag.aggregate([
+      { $project: { name: 1, numberOfQuestions: { $size: "$questions" } } },
+      { $sort: { numberOfQuestions: -1 } }, // desc order
+      { $limit: 5 },
+    ]);
+    return popularTags;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 // 2 wersja
 
 // export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
