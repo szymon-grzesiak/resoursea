@@ -11,15 +11,20 @@ import ProfileLink from "@/components/shared/ProfileLink";
 import Stats from "@/components/shared/Stats";
 import QuestionTab from "@/components/shared/QuestionTab";
 import AnswersTab from "@/components/shared/AnswersTab";
+import { getHotQuestions } from "@/lib/actions/question.action";
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
   const userInfo = await getUserProfile({ userId: params.id });
+  const questions = await getHotQuestions();
 
   return (
     <>
       <div className="flex flex-col-reverse items-start justify-between sm:flex-row">
         <div className="flex flex-col items-start gap-4 lg:flex-row">
+          {questions.map((question) => (
+            <div key={question._id}>{question._id}</div>
+          ))}
           <Image
             src={userInfo?.user.picture}
             alt="profile picture"

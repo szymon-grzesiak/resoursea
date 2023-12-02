@@ -17,6 +17,7 @@ import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import Answer from "@/database/answer.model";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export async function getUserById(params: any) {
   try {
@@ -239,7 +240,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
         select: "_id clerkId name picture",
       });
 
-    return { totalAnswers, answers: userAnswers};
+    return { totalAnswers, answers: userAnswers };
   } catch (error) {
     console.log(error);
     throw error;
