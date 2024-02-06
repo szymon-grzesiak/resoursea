@@ -94,9 +94,18 @@ export async function deleteUser(params: DeleteUserParams) {
 
 export async function getAllUsers(params: GetAllUsersParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
     // const { page = 1, pageSize = 20, filter, searchQuery } = params;
-    const users = await User.find({}).sort({ createdAt: -1 });
+    const query: FilterQuery<typeof Question> = {};
+    const { searchQuery } = params;
+
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+    const users = await User.find(query).sort({ createdAt: -1 });
     return { users };
   } catch (error) {
     console.log(error);
@@ -122,14 +131,14 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
       await User.findByIdAndUpdate(
         userId,
         { $pull: { saved: questionId } },
-        { new: true }
+        { new: true },
       );
     } else {
       //add question to saved
       await User.findByIdAndUpdate(
         userId,
         { $addToSet: { saved: questionId } },
-        { new: true }
+        { new: true },
       );
     }
 

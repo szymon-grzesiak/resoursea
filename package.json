@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.26.1",
+    "@clerk/nextjs": "^4.29.6",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.3.2",
@@ -50,6 +50,7 @@
     "eslint": "^8",
     "eslint-config-next": "^14.0.1",
     "postcss": "^8",
+    "prettier": "3.2.5",
     "tailwindcss": "^3",
     "typescript": "^5"
   }

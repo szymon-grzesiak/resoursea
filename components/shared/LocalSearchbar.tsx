@@ -43,11 +43,11 @@ const LocalSearchBar = ({
         });
         router.push(newUrl, { scroll: false });
       } else {
-        if(pathname === route) {
+        if (pathname === route) {
           const newUrl = removeKeysFromQuery({
             params: searchParams.toString(),
-            keysToRemove: ['q']
-          })
+            keysToRemove: ["q"],
+          });
           router.push(newUrl, { scroll: false });
         }
       }
@@ -59,7 +59,7 @@ const LocalSearchBar = ({
     <div
       className={cn(
         "background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4",
-        className
+        className,
       )}
     >
       {iconPosition === "left" && (
@@ -93,7 +93,6 @@ const LocalSearchBar = ({
 };
 
 export default LocalSearchBar;
-function removeKeysFromQuertu(arg0: { params: string; keys: string[]; }) {
-  throw new Error("Function not implemented.");
-}
-
+// function removeKeysFromQuery(arg0: { params: string; keys: string[]; }) {
+//   throw new Error("Function not implemented.");
+// }

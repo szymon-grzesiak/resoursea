@@ -91,12 +91,14 @@ interface UrlQueryParams {
 export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {
   const currentUrl = qs.parse(params);
   currentUrl[key] = value;
-  return qs.stringify(
+  return qs.stringifyUrl(
     {
       url: window.location.pathname,
       query: currentUrl,
     },
-    { skipNull: true }
+    {
+      skipNull: true,
+    },
   );
 };
 interface RemoveQueryParams {
@@ -104,16 +106,19 @@ interface RemoveQueryParams {
   keysToRemove: string[];
 }
 
-export const removeKeysFromQuery = ({ params, keysToRemove}: RemoveQueryParams) => {
+export const removeKeysFromQuery = ({
+  params,
+  keysToRemove,
+}: RemoveQueryParams) => {
   const currentUrl = qs.parse(params);
   keysToRemove.forEach((key) => {
     delete currentUrl[key];
-  })
-  return qs.stringify(
+  });
+  return qs.stringifyUrl(
     {
       url: window.location.pathname,
       query: currentUrl,
     },
-    { skipNull: true }
+    { skipNull: true },
   );
 };
