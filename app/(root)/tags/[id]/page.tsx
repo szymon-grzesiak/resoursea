@@ -18,7 +18,7 @@ export default async function Page({ params, searchParams }: URLProps) {
       <div className="mt-11 w-full">
         <LocalSearchBar
           className="flex-1"
-          route="/"
+          route={`/tags/${params.id}`}
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search tag questions"
@@ -29,6 +29,7 @@ export default async function Page({ params, searchParams }: URLProps) {
           result.questions.map((question: any) => (
             <QuestionCard
               key={question._id}
+              clerkId={question.author.clerkId}
               _id={question._id}
               title={question.title}
               author={question.author}

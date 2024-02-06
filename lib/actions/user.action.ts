@@ -134,7 +134,6 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
         { new: true },
       );
     } else {
-      //add question to saved
       await User.findByIdAndUpdate(
         userId,
         { $addToSet: { saved: questionId } },
@@ -150,15 +149,18 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 }
 export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
-    const { clerkId, page, pageSize, filter, searchQuery } = params;
+    const { clerkId, searchQuery } = params;
 
-    const query: FilterQuery<typeof Question> = searchQuery
-      ? { title: { $regex: new RegExp(searchQuery, "i") } }
-      : {};
+    const query: FilterQuery<typeof Question> = {};
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
 
-    const user = await User.findOne({ userId: clerkId }).populate({
+    const user = await User.findOne(query, { userId: clerkId }).populate({
       path: "saved",
       match: query,
       options: {

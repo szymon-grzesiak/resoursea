@@ -5,8 +5,9 @@ import { getAllTags } from "@/lib/actions/tag.action";
 
 import NoResult from "@/components/shared/NoResult";
 import Link from "next/link";
-const Page = async () => {
-  const result = await getAllTags({});
+import { SearchParamsProps } from "@/types";
+export default async function Page({ searchParams }: SearchParamsProps) {
+  const result = await getAllTags({searchQuery: searchParams.q});
 
   return (
     <>
@@ -61,4 +62,3 @@ const Page = async () => {
   );
 };
 
-export default Page;
