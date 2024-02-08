@@ -17,7 +17,6 @@ import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import Answer from "@/database/answer.model";
-import { ClerkProvider } from "@clerk/nextjs";
 
 export async function getUserById(params: any) {
   try {
@@ -97,7 +96,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
     await connectToDatabase();
     // const { page = 1, pageSize = 20, filter, searchQuery } = params;
     const query: FilterQuery<typeof Question> = {};
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
 
     if (searchQuery) {
       query.$or = [
@@ -105,7 +104,18 @@ export async function getAllUsers(params: GetAllUsersParams) {
         { username: { $regex: new RegExp(searchQuery, "i") } },
       ];
     }
-    const users = await User.find(query).sort({ createdAt: -1 });
+
+    let sortOptions = {};
+
+    if (filter === "new_users") {
+      sortOptions = { joinedAt: -1 };
+    } else if (filter === "old_users") {
+      sortOptions = { joinedAt: 1 };
+    } else if (filter === "top_contributors") {
+      sortOptions = { reputation: -1 };
+    }
+
+    const users = await User.find(query).sort(sortOptions);
     return { users };
   } catch (error) {
     console.log(error);
@@ -131,13 +141,13 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
       await User.findByIdAndUpdate(
         userId,
         { $pull: { saved: questionId } },
-        { new: true },
+        { new: true }
       );
     } else {
       await User.findByIdAndUpdate(
         userId,
         { $addToSet: { saved: questionId } },
-        { new: true },
+        { new: true }
       );
     }
 
@@ -151,20 +161,33 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     await connectToDatabase();
 
-    const { clerkId, searchQuery } = params;
+    const { clerkId, filter, searchQuery } = params;
+
 
     const query: FilterQuery<typeof Question> = {};
     if (searchQuery) {
-      query.$or = [
-        { title: { $regex: new RegExp(searchQuery, "i") } },
-      ];
+      query.$or = [{ title: { $regex: new RegExp(searchQuery, "i") } }];
     }
+
+    let variable = {};
+    if(filter === "most_recent") {
+      variable = { createdAt: -1 };
+    } else if(filter === 'oldest') {
+      variable = { createdAt: 1 };
+    } else if(filter === 'most_voted') {
+      variable = { upvotes: -1 };
+    } else if(filter === 'most_viewed') {
+      variable = { views: -1 };
+    } else if(filter === 'most_answered') {
+      variable = { answers: -1 };
+    }
+
 
     const user = await User.findOne(query, { userId: clerkId }).populate({
       path: "saved",
       match: query,
       options: {
-        sort: { createdAt: -1 },
+        sort: variable,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
@@ -237,6 +260,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
     const { userId, page = 1, pageSize = 10 } = params;
 
     const totalAnswers = await Answer.countDocuments({ author: userId });
+    
 
     const userAnswers = await Answer.find({ author: userId })
       .sort({ upvotes: -1 })

@@ -21,7 +21,7 @@ export async function getQuestions(params: GetQuestionsParams) {
   try {
     await connectToDatabase();
 
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
     const query: FilterQuery<typeof Question> = {};
     if (searchQuery) {
       query.$or = [
@@ -30,10 +30,22 @@ export async function getQuestions(params: GetQuestionsParams) {
       ];
     }
 
+    let variable = {};
+    if(filter === "newest") {
+      variable = { createdAt: -1 }
+    } else if(filter === 'recommended') {
+      variable = { views: -1, upvotes: -1 }
+    } else if(filter === 'frequent') {
+      variable = { views: -1 }
+    } else if(filter === 'unanswered') {
+      variable = { answers: 0 }
+    }
+
+
     const questions = await Question.find(query)
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
-      .sort({ createdAt: -1 });
+      .sort(variable);
 
     return { questions };
   } catch (error) {
