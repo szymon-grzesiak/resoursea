@@ -50,16 +50,35 @@ export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDatabase();
 
-    const {searchQuery} = params;
+    const { searchQuery, filter } = params;
 
     const query: FilterQuery<typeof Question> = {};
     if (searchQuery) {
-      query.$or = [
-        { name: { $regex: new RegExp(searchQuery, "i") } },
-      ];
+      query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
     }
 
-    const tags = await Tag.find(query);
+    let sortOptions = {};
+
+
+    switch (filter) {
+      case "popular":
+        sortOptions = { questions: 1 };
+        break;
+      case "recent":
+        sortOptions = { createdOn: -1 };
+        break;
+      case "name":
+        sortOptions = { name: 1 };
+        break;
+      case "old":
+        sortOptions = { createdOn: 1 };
+        break;
+    }
+
+    const tags = await Tag.find(query)
+      .collation({ locale: "en", strength: 2 })
+      .sort(sortOptions);
+    console.log(tags);
 
     return { tags };
   } catch (error) {
@@ -73,7 +92,6 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     connectToDatabase();
 
     const { tagId, searchQuery } = params;
-
 
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
