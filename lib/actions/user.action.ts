@@ -94,9 +94,9 @@ export async function deleteUser(params: DeleteUserParams) {
 export async function getAllUsers(params: GetAllUsersParams) {
   try {
     await connectToDatabase();
-    // const { page = 1, pageSize = 20, filter, searchQuery } = params;
+
     const query: FilterQuery<typeof Question> = {};
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
 
     if (searchQuery) {
       query.$or = [
@@ -115,8 +115,17 @@ export async function getAllUsers(params: GetAllUsersParams) {
       sortOptions = { reputation: -1 };
     }
 
-    const users = await User.find(query).sort(sortOptions);
-    return { users };
+    const skipAmount = (page - 1) * pageSize;
+
+    const users = await User.find(query)
+      .skip(skipAmount)
+      .limit(pageSize)
+      .sort(sortOptions);
+
+    const totalUsers = await User.countDocuments(query);
+    const isNext = totalUsers > skipAmount + users.length;
+
+    return { users, isNext };
   } catch (error) {
     console.log(error);
     throw Error;
@@ -161,8 +170,9 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     await connectToDatabase();
 
-    const { clerkId, filter, searchQuery } = params;
+    const { clerkId, filter, searchQuery, page = 1, pageSize = 1 } = params;
 
+    const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Question> = {};
     if (searchQuery) {
@@ -170,24 +180,25 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
     }
 
     let variable = {};
-    if(filter === "most_recent") {
+    if (filter === "most_recent") {
       variable = { createdAt: -1 };
-    } else if(filter === 'oldest') {
+    } else if (filter === "oldest") {
       variable = { createdAt: 1 };
-    } else if(filter === 'most_voted') {
+    } else if (filter === "most_voted") {
       variable = { upvotes: -1 };
-    } else if(filter === 'most_viewed') {
+    } else if (filter === "most_viewed") {
       variable = { views: -1 };
-    } else if(filter === 'most_answered') {
+    } else if (filter === "most_answered") {
       variable = { answers: -1 };
     }
-
 
     const user = await User.findOne(query, { userId: clerkId }).populate({
       path: "saved",
       match: query,
       options: {
         sort: variable,
+        skip: skipAmount,
+        limit: pageSize + 1,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
@@ -195,13 +206,15 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
       ],
     });
 
+    const isNext = user.saved.length > pageSize;
+
     if (!user) {
       throw new Error("User not found");
     }
 
     const savedQuestions = user.saved;
 
-    return { questions: savedQuestions };
+    return { questions: savedQuestions, isNext };
   } catch (error) {
     console.log(error);
     throw error;
@@ -237,16 +250,22 @@ export async function getUserQuestions(params: GetUserStatsParams) {
   try {
     connectToDatabase();
 
-    const { userId, page = 1, pageSize = 10 } = params;
+    const { userId, page = 1, pageSize = 3 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
 
     const totalQuestions = await Question.countDocuments({ author: userId });
 
     const userQuestions = await Question.find({ author: userId })
       .sort({ views: -1, upvotes: -1 })
       .populate("tags", "_id name")
+      .skip(skipAmount)
+      .limit(pageSize)
       .populate("author", "_id clerkId name picture");
 
-    return { totalQuestions, questions: userQuestions };
+    const isNextQuestions = totalQuestions > skipAmount + userQuestions.length;
+
+    return { totalQuestions, questions: userQuestions, isNextQuestions };
   } catch (error) {
     console.log(error);
     throw error;
@@ -259,11 +278,14 @@ export async function getUserAnswers(params: GetUserStatsParams) {
 
     const { userId, page = 1, pageSize = 10 } = params;
 
+    const skipAmount = (page - 1) * pageSize;
+
     const totalAnswers = await Answer.countDocuments({ author: userId });
-    
 
     const userAnswers = await Answer.find({ author: userId })
       .sort({ upvotes: -1 })
+      .skip(skipAmount)
+      .limit(pageSize)
       .populate({
         path: "question",
         model: Question,
@@ -275,7 +297,9 @@ export async function getUserAnswers(params: GetUserStatsParams) {
         select: "_id clerkId name picture",
       });
 
-    return { totalAnswers, answers: userAnswers };
+    const isNextAnswer = totalAnswers > skipAmount + userAnswers.length;
+
+    return { totalAnswers, answers: userAnswers, isNextAnswer };
   } catch (error) {
     console.log(error);
     throw error;

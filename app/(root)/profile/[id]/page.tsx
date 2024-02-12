@@ -15,7 +15,9 @@ import { getHotQuestions } from "@/lib/actions/question.action";
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
-  const userInfo = await getUserProfile({ userId: params.id });
+  const userInfo = await getUserProfile({ 
+    userId: params.id
+   });
 
   return (
     <>

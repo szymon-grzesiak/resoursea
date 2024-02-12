@@ -21,7 +21,10 @@ export async function getQuestions(params: GetQuestionsParams) {
   try {
     await connectToDatabase();
 
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
+
     const query: FilterQuery<typeof Question> = {};
     if (searchQuery) {
       query.$or = [
@@ -31,23 +34,27 @@ export async function getQuestions(params: GetQuestionsParams) {
     }
 
     let variable = {};
-    if(filter === "newest") {
-      variable = { createdAt: -1 }
-    } else if(filter === 'recommended') {
-      variable = { views: -1, upvotes: -1 }
-    } else if(filter === 'frequent') {
-      variable = { views: -1 }
-    } else if(filter === 'unanswered') {
-      variable = { answers: 0 }
+    if (filter === "newest") {
+      variable = { createdAt: -1 };
+    } else if (filter === "recommended") {
+      variable = { views: -1, upvotes: -1 };
+    } else if (filter === "frequent") {
+      variable = { views: -1 };
+    } else if (filter === "unanswered") {
+      variable = { answers: 0 };
     }
-
 
     const questions = await Question.find(query)
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
+      .skip(skipAmount)
+      .limit(pageSize)
       .sort(variable);
 
-    return { questions };
+      const totalQuestions = await Question.countDocuments(query);
+      const isNext = totalQuestions > skipAmount + questions.length;
+
+    return { questions, isNext };
   } catch (error) {
     console.log(error);
     throw error;
@@ -72,7 +79,7 @@ export async function createQuestion(params: CreateQuestionParams) {
       const existingTag = await Tag.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}$`, "i") } },
         { $setOnInsert: { name: tag }, $push: { questions: question._id } },
-        { upsert: true, new: true },
+        { upsert: true, new: true }
       );
       tagDocuments.push(existingTag._id);
     }
@@ -181,7 +188,7 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
     await Interaction.deleteMany({ question: questionId });
     await Tag.updateMany(
       { questions: questionId },
-      { $pull: { questions: questionId } },
+      { $pull: { questions: questionId } }
     );
 
     revalidatePath(path);

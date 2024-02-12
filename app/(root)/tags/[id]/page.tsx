@@ -1,13 +1,14 @@
 import QuestionCard from "@/components/cards/QuestionCard";
 import LocalSearchBar from "@/components/shared/LocalSearchbar";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
 
 export default async function Page({ params, searchParams }: URLProps) {
   const result = await getQuestionsByTagId({
     tagId: params.id,
-    page: 1,
+    page: searchParams.page ? +searchParams.page : 1,
     searchQuery: searchParams.q,
   });
 
@@ -44,12 +45,18 @@ export default async function Page({ params, searchParams }: URLProps) {
           <NoResult
             title="There's no tag question to show"
             description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
-        discussion. Our query could be the next big thing others learn from. Get
-        involved! 💡"
+              discussion. Our query could be the next big thing others learn from. Get
+              involved! 💡"
             link="/ask-question"
             linkTitle="Ask a Question"
           />
         )}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        />
       </div>
     </>
   );
