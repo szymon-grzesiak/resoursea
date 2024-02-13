@@ -1,4 +1,4 @@
-import LocalSearchBar from "@/components/shared/LocalSearchbar";
+import LocalSearchBar from "@/components/shared/search/LocalSearchbar";
 import Filter from "@/components/shared/Filter";
 import { TagFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.action";
@@ -64,9 +64,11 @@ export default async function Page({ searchParams }: SearchParamsProps) {
         )}
       </section>
       <div className="mt-10">
-        <Pagination pageNumber={searchParams?.page ? +searchParams.page : 1} isNext={result.isNext} />
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        />
       </div>
     </>
   );
-};
-
+}

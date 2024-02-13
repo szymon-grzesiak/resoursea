@@ -1,7 +1,7 @@
 import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilters from "@/components/home/HomeFilters";
 import Filters from "@/components/shared/Filter";
-import LocalSearchBar from "@/components/shared/LocalSearchbar";
+import LocalSearchBar from "@/components/shared/search/LocalSearchbar";
 import NoResult from "@/components/shared/NoResult";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
@@ -71,7 +71,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       </div>
       <div className="mt-10">
         <Pagination
-        // TODO: + robi, żeby zmienić stringa na number
+          // TODO: + robi, żeby zmienić stringa na number
           pageNumber={searchParams?.page ? +searchParams.page : 1}
           isNext={result.isNext}
         />

@@ -1,5 +1,5 @@
 import QuestionCard from "@/components/cards/QuestionCard";
-import LocalSearchBar from "@/components/shared/LocalSearchbar";
+import LocalSearchBar from "@/components/shared/search/LocalSearchbar";
 import NoResult from "@/components/shared/NoResult";
 import Pagination from "@/components/shared/Pagination";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";

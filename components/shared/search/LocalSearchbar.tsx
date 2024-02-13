@@ -1,14 +1,9 @@
 "use client";
 import React, { ComponentPropsWithoutRef, useEffect, useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 import { cn, formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
   route: string;
@@ -59,7 +54,7 @@ const LocalSearchBar = ({
     <div
       className={cn(
         "background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4",
-        className,
+        className
       )}
     >
       {iconPosition === "left" && (
