@@ -9,9 +9,9 @@ import {
 import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { formatAndDivideNumbers } from "@/lib/utils";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import { toast } from "sonner";
 
 interface Props {
   type: string;
@@ -47,7 +47,9 @@ const Votes = ({
 
   const handleVote = async (action: string) => {
     if (!userId) {
-      return;
+      return toast("Please log in", {
+        description: "You must be logged in to perform this action",
+      });
     }
 
     if (action === "upvote") {
@@ -69,7 +71,11 @@ const Votes = ({
         });
       }
       // TODO: show a toast
-      return;
+      if (!hasupVoted) {
+        return toast.success("Upvote successfull");
+      } else {
+        return toast.warning("Upvote removed");
+      }
     }
 
     if (action === "downvote") {
