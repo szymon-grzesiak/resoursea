@@ -19,6 +19,8 @@ import { Button } from "../ui/button";
 // import Image from "next/image";
 import { createAnswer } from "@/lib/actions/answer.action";
 import { toast } from "sonner";
+import { useAuth } from "@clerk/nextjs";
+ 
 
 interface Props {
   question: string;
@@ -29,6 +31,7 @@ interface Props {
 const Answer = ({ question, questionId, authorId }: Props) => {
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isSignedIn } = useAuth();
   // const [isSubmittingAI, setIsSubmittingAI] = useState(false);
   const { mode } = useTheme();
 
@@ -41,6 +44,11 @@ const Answer = ({ question, questionId, authorId }: Props) => {
     },
   });
   const handleCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
+   if (!isSignedIn) {
+      return toast("Please log in", {
+        description: "You must be logged in to perform this action",
+      });
+    }
     setIsSubmitting(true);
 
     try {
