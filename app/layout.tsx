@@ -7,6 +7,7 @@ import React from "react";
 import "./globals.css";
 import "../styles/prism.css";
 import ThemeProvider from "@/context/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,9 +22,9 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "DevFlow",
+  title: "Resoursea",
   description:
-    "A community-driven platform for asking and answering questions about programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
+    "A community-driven platform for asking and answering questions about free resources. Get help, share knowledge with people from around the world. Explore topics in technology, movies, music, and more.",
   icons: {
     icon: "/assets/images/site-logo.svg",
   },
@@ -46,6 +47,7 @@ export default function RootLayout({
           }}
         >
           <ThemeProvider>{children}</ThemeProvider>
+          <Toaster />
         </ClerkProvider>
       </body>
     </html>

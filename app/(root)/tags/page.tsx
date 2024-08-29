@@ -23,7 +23,7 @@ export default async function Page({ searchParams }: SearchParamsProps) {
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for tags"
-          className="flex-1"
+          otherClasses="flex-1"
         />
 
         <Filter

@@ -18,7 +18,7 @@ export default async function Page({ params, searchParams }: URLProps) {
 
       <div className="mt-11 w-full">
         <LocalSearchBar
-          className="flex-1"
+          otherClasses="flex-1"
           route={`/tags/${params.id}`}
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"

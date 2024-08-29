@@ -22,7 +22,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for amazing minds"
-          className="flex-1"
+          otherClasses="flex-1"
         />
 
         <Filter

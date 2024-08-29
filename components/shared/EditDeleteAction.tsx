@@ -4,6 +4,7 @@ import { deleteQuestion } from "@/lib/actions/question.action";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
+import { toast } from "sonner"
 
 interface Props {
   type: string;
@@ -13,16 +14,29 @@ interface Props {
 const EditDeleteAction = ({ type, itemId }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
+
   const handleEdit = () => {
-    router.push(`/question/edit/${JSON.parse(itemId)}`);
+    router.push(`/question/edit/${JSON.parse(itemId)}`)
   };
+
   const handleDelete = async () => {
-    if (type === "Question") {
+    if(type === 'Question') {
       // Delete question
-      await deleteQuestion({ questionId: JSON.parse(itemId), path: pathname });
-    } else if (type === "Answer") {
+      await deleteQuestion({ 
+        questionId: JSON.parse(itemId), 
+        path: pathname 
+      }).then(() => {
+        toast.success('Question deleted successfully')
+      })
+    } else if(type === 'Answer') {
       // Delete answer
-      await deleteAnswer({ answerId: JSON.parse(itemId), path: pathname });
+      await deleteAnswer({ 
+        answerId: JSON.parse(itemId), 
+        path: pathname 
+      }).then(() => {
+        toast.success('Answer deleted successfully')
+      }
+    )
     }
   };
   return (
@@ -43,7 +57,7 @@ const EditDeleteAction = ({ type, itemId }: Props) => {
         width={18}
         height={18}
         className="cursor-pointer object-contain"
-        onClick={handleEdit}
+        onClick={handleDelete}
       />
     </div>
   );

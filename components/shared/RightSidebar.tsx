@@ -10,15 +10,15 @@ const RightSidebar = async () => {
   const popularTags = await getTopPopularTags();
 
   return (
-    <section className="custom-scrollbar background-light900_dark200 light-border sticky right-0 top-0 flex h-screen w-[350px] flex-col gap-6 overflow-y-auto border-l p-6 pt-36 shadow-light-300 dark:shadow-none max-xl:hidden">
+    <section className="custom-scrollbar background-light900_dark200 light-border sticky right-0 top-0 flex h-screen w-[350px] flex-col gap-6 overflow-y-auto border-l p-6 pt-28 shadow-light-300 dark:shadow-none max-xl:hidden">
       <div>
         <h3 className="h3-bold text-dark200_light900">Top Questions</h3>
-        <div className="mt-7 flex w-full flex-col gap-[30px]">
+        <div className="mt-7 flex w-full flex-col gap-[10px]">
           {hotQuestions.map((question) => (
             <Link
               href={`/question/${question._id}`}
               key={question._id}
-              className="flex cursor-pointer items-center justify-between gap-7"
+              className="flex cursor-pointer items-center justify-between gap-7 rounded-md px-3 py-[20px] hover:bg-black/5 dark:hover:bg-white/5"
             >
               <p className="body-medium text-dark500_light700">
                 {question.title}

@@ -8,7 +8,7 @@
   }
 
   .background-light900_dark200 {
-    @apply bg-light-900 dark:bg-dark-200;
+    @apply bg-light-900/30 dark:bg-dark-200/60 backdrop-blur-xl;
   }
 
   .background-light900_dark300 {

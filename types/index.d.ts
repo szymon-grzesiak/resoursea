@@ -20,11 +20,6 @@ export interface Job {
   job_country?: string;
 }
 
-export interface Country {
-  name: {
-    common: string;
-  };
-}
 
 export interface ParamsProps {
   params: { id: string };

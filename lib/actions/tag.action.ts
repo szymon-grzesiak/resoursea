@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use server";
 
 import Question from "@/database/question.model";
@@ -50,7 +51,7 @@ export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDatabase();
 
-    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 9 } = params;
 
     const skipAmount = (page - 1) * pageSize;
 
@@ -83,7 +84,6 @@ export async function getAllTags(params: GetAllTagsParams) {
       .skip(skipAmount)
       .limit(pageSize)
       .sort(sortOptions);
-    console.log(tags);
 
     const isNext = totalTags > skipAmount + tags.length;
 

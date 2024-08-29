@@ -37,11 +37,11 @@ const AllAnswers = async ({
         <Filter filters={AnswerFilters} />
       </div>
 
-      <div>
+      <div className="flex flex-col gap-5">
         {result.answers.map((answer) => (
           <article
             key={answer._id}
-            className="light-border border-b py-10"
+            className="light-border border-b py-10 card-wrapper rounded-[10px] shadow-xl px-6"
             id={JSON.stringify(answer._id)}
           >
             <div className="flex items-center justify-between">

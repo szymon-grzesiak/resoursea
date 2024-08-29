@@ -32,11 +32,10 @@ interface Props {
 }
 
 const ParseHTML = ({ data }: Props) => {
-    useEffect(() => {
-        Prism.highlightAll();
-    }
-    , []);
-  return <div className="break-words">{parse(data)}</div>;
+  useEffect(() => {
+    Prism.highlightAll();
+  }, []);
+  return <div className="w-full min-w-full break-all dark:text-white">{parse(data)}</div>;
 };
 
 export default ParseHTML;

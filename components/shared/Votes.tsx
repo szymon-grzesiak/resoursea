@@ -70,7 +70,6 @@ const Votes = ({
           path: pathname,
         });
       }
-      // TODO: show a toast
       if (!hasupVoted) {
         return toast.success("Upvote successfull");
       } else {
@@ -96,7 +95,11 @@ const Votes = ({
           path: pathname,
         });
       }
-      // TODO: show a toast
+      if (!hasdownVoted) {
+        return toast.success("Downvote successfull");
+      } else {
+        return toast.warning("Downvote removed");
+      }
     }
   };
 

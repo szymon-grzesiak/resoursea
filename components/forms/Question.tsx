@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "../ui/badge";
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { useTheme } from "@/context/ThemeProvider";
+import { toast } from "sonner";
 // import { Router } from "next/router";
 
 interface Props {
@@ -60,7 +61,9 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
           title: values.title,
           content: values.explanation,
           path: pathname,
-        });
+        }).then(() => {
+          toast.success('Question edited successfully')
+        })
         router.push(`/question/${parseQuestionDetails._id}`);
       } else {
         // make an async to your API -> create a question
@@ -71,7 +74,9 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
           tags: values.tags,
           author: JSON.parse(mongoUserId),
           path: pathname,
-        });
+        }).then(() => {
+          toast.success('Question created successfully')
+        })
         // navigate to home page
         router.push("/");
       }

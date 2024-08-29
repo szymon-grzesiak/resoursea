@@ -6,7 +6,7 @@ import Pagination from "@/components/shared/Pagination";
 import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
-import { auth } from "@clerk/nextjs";
+import { auth } from '@clerk/nextjs/server'
 
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
@@ -27,7 +27,7 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchBar
-          className="flex-1"
+          otherClasses="flex-1"
           route="/collection"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
