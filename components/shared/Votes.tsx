@@ -38,6 +38,11 @@ const Votes = ({
   const router = useRouter();
 
   const handleSave = () => {
+    if (!userId) {
+      return toast("Please log in", {
+        description: "You must be logged in to perform this action",
+      });
+    }
     toggleSaveQuestion({
       userId: JSON.parse(userId),
       questionId: JSON.parse(itemId),
