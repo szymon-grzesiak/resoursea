@@ -5,12 +5,16 @@ import LocalSearchBar from "@/components/shared/search/LocalSearchbar";
 import NoResult from "@/components/shared/NoResult";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
-import { getQuestions, getRecommendedQuestions } from "@/lib/actions/question.action";
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from "@/lib/actions/question.action";
 import Link from "next/link";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
 import type { Metadata } from "next";
-import { auth } from '@clerk/nextjs/server'
+import { auth } from "@clerk/nextjs/server";
+import BlockAccess from "@/components/shared/BlockAccess";
 
 export const metadata: Metadata = {
   title: "Home | Resoursea",
@@ -18,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  const {userId} = auth();
+  const { userId } = auth();
   let result;
 
   if (searchParams?.filter === "recommended") {
@@ -32,7 +36,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       result = {
         questions: [],
         isNext: false,
-      }
+      };
     }
   } else {
     result = await getQuestions({
@@ -46,11 +50,15 @@ export default async function Home({ searchParams }: SearchParamsProps) {
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
-        <Link href="/ask-question" className="flex justify-end max-sm:w-full">
-          <Button className="primary-gradient min-h-[46px] px-4 py-3 text-light-900">
-            Ask a Question
-          </Button>
-        </Link>
+        {!userId ? (
+          <BlockAccess />
+        ) : (
+          <Link href="/ask-question" className="flex justify-end max-sm:w-full">
+            <Button className="primary-gradient min-h-[46px] px-4 py-3 text-light-900">
+              Ask a Question
+            </Button>
+          </Link>
+        )}
       </div>
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchBar
