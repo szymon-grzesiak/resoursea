@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { JobFilterParams } from "./shared.types";
 
 export const fetchLocation = async () => {
@@ -7,6 +8,7 @@ export const fetchLocation = async () => {
 };
 
 export const fetchCountries = async () => {
+  noStore();
   try {
     const response = await fetch("https://restcountries.com/v3.1/all");
     const result = await response.json();
@@ -18,6 +20,7 @@ export const fetchCountries = async () => {
 };
 
 export const fetchJobs = async (filters: JobFilterParams) => {
+  noStore();
   const { query, page } = filters;
 
   const headers = {
