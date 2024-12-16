@@ -10,13 +10,13 @@ const handleClick = () => {
   });
 };
 
-const BlockAccess = () => {
+const BlockAccess = ({ description = 'Ask a Question' }: { description?: string }) => {
   return (
     <Button
       onClick={handleClick}
       className="primary-gradient min-h-[46px] px-4 py-3 text-light-900"
     >
-      Ask a Question
+      {description}
     </Button>
   );
 };
