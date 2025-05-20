@@ -49,4 +49,5 @@ This project involved several challenging yet rewarding aspects:
 ## 📄 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more information.
+---
 Made with ❤️ by Szymon Grzesiak
