@@ -1,7 +1,7 @@
 # Resoursea - Share Your Knowledge
 
 #
-Whole documentation of this codebase available at: [https://deepwiki.com/szymon-grzesiak/recipea](https://deepwiki.com/szymon-grzesiak/recipea)
+Whole documentation of this codebase available at: [https://deepwiki.com/szymon-grzesiak/resoursea](https://deepwiki.com/szymon-grzesiak/resoursea)
 #
 
 Resoursea is a versatile platform designed for knowledge sharing, allowing users to post content, engage in discussions, exchange ideas, find job opportunities, and earn recognition for their contributions.
